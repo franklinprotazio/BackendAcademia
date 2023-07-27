@@ -5,9 +5,9 @@ Este é o repositório do Backend da Academia, um projeto desenvolvido para fins
 O objetivo deste projeto é me proporcionar uma oportunidade de aprimorar minhas habilidades em desenvolvimento de aplicações web com Java e Spring Boot, bem como para demonstrar minhas capacidades técnicas em um portfólio de projetos. O sistema de gerenciamento de academias permite a criação, consulta e gerenciamento de turmas, alunos e cursos através de uma API RESTful.
 
 ## Tecnologias Utilizadas
-Java
-Spring Boot
-Spring Data JPA (Java Persistence API)
-MySQL (ou outro banco de dados relacional compatível)
-Maven (para gerenciamento de dependências)
-REST API (para comunicação entre frontend e backend)
+- Java
+- Spring Boot
+- Spring Data JPA (Java Persistence API)
+- MySQL (ou outro banco de dados relacional compatível)
+- Maven (para gerenciamento de dependências)
+- REST API (para comunicação entre frontend e backend)
