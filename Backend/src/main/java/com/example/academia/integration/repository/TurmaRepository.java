@@ -27,8 +27,8 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
 	@Query("SELECT t FROM Turma t WHERE "
 		       + "(:horario IS NULL OR :horario = '' OR t.horario = :horario) "
-		       + "AND (:nome IS NULL OR :curso = '' OR t.curso = :curso)")
-		List<Turma> getTurmas(@Param("horario") String horarios, @Param("curso") String curso);
+		       + "AND (:curso IS NULL OR :curso = '' OR t.curso = :curso)")
+		List<Turma> getTurmas(@Param("horario") String horario, @Param("curso") String curso);
 
 
 }

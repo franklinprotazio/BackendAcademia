@@ -42,7 +42,7 @@ public class AlunoController {
 			return ResponseEntity.status(HttpStatus.OK).body(lista);
 		}
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Não foram encontrados alunos com o filtro informado");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontrados alunos com o filtro informado");
 	}
 	
 	@PostMapping()

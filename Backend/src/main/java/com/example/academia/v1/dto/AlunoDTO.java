@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -15,7 +16,8 @@ public class AlunoDTO {
 	private String nomeAluno;
 	
 	private Date dataMatricula;
-		
+	
+	@NotNull	
 	private TurmaRetornoDTO turma;
 
 }

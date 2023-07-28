@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AlunoSemAcademiaDTO {
+public class AlunoSemTurmaDTO {
 
 	private Long idAluno;
 

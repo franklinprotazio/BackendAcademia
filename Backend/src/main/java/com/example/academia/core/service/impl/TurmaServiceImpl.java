@@ -50,7 +50,7 @@ public class TurmaServiceImpl implements TurmaService {
 	@Override
 	public TurmaDTO salvarTurma(TurmaDTO turmaDTO) {
 		Turma turma = modelMapper.map(turmaDTO, Turma.class);
-		TurmaDTO turmaRetornoDTO = modelMapper.map(turma, TurmaDTO.class);
+		TurmaDTO turmaRetornoDTO = modelMapper.map(turmaRepository.save(turma), TurmaDTO.class);
 
 		return turmaRetornoDTO;
 	}
@@ -90,11 +90,11 @@ public class TurmaServiceImpl implements TurmaService {
 	}
 
 	@Override
-	public List<TurmaDTO> getTurmas(String horarios, String nome) {
-		horarios = Objects.nonNull(horarios) ? horarios : "";
-		nome = Objects.nonNull(nome) ? nome : "";
+	public List<TurmaDTO> getTurmas(String horario, String curso) {
+		horario = Objects.nonNull(horario) ? horario : "";
+		curso = Objects.nonNull(curso) ? curso : "";
 
-		List<Turma> turmas = turmaRepository.getTurmas(horarios, nome);
+		List<Turma> turmas = turmaRepository.getTurmas(horario, curso);
 		List<TurmaDTO> turmasDTO = new ArrayList<>();
 
 		for (Turma turma : turmas) {

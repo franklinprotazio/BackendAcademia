@@ -18,7 +18,7 @@ public interface TurmaService {
 
 	List<TurmaDTO> buscarTurmaPorCurso(String cursoTurma);
 
-	List<TurmaDTO> getTurmas(String horarios, String nome);
+	List<TurmaDTO> getTurmas(String horario, String nome);
 	
 	
 }
