@@ -8,6 +8,6 @@ O objetivo deste projeto é me proporcionar uma oportunidade de aprimorar minhas
 - Java
 - Spring Boot
 - Spring Data JPA (Java Persistence API)
-- MySQL (ou outro banco de dados relacional compatível)
+- H2
 - Maven (para gerenciamento de dependências)
 - REST API (para comunicação entre frontend e backend)
