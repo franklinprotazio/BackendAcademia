@@ -10,4 +10,4 @@ O objetivo deste projeto é me proporcionar uma oportunidade de aprimorar minhas
 - Spring Data JPA (Java Persistence API)
 - H2
 - Maven (para gerenciamento de dependências)
-- REST API (para comunicação entre frontend e backend)
+- REST API
