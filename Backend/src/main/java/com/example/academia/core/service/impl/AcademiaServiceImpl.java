@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.academia.core.entity.Academia;
+import com.example.academia.core.entity.Aluno;
 import com.example.academia.core.entity.Turma;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.service.AcademiaService;
 import com.example.academia.integration.repository.AcademiaRepository;
+import com.example.academia.integration.repository.AlunoRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AcademiaDTO;
+import com.example.academia.v1.dto.AlunoSemAcademiaDTO;
 import com.example.academia.v1.dto.TurmaSemAcademiaDTO;
 
 @Service
@@ -27,6 +30,9 @@ public class AcademiaServiceImpl implements AcademiaService {
 		
 	@Autowired
 	private TurmaRepository turmaRepository;
+	
+	@Autowired
+	private AlunoRepository alunoRepository;
 		
 	@Autowired
 	private ModelMapper modelMapper;
@@ -55,6 +61,31 @@ public class AcademiaServiceImpl implements AcademiaService {
 		return listaRetornos;
 	}
 
+	@Override
+	public List<AcademiaDTO> getAcademiasComAlunos() {
+		
+		List<Academia> academias = academiaRepository.findAll();
+		List<AcademiaDTO> listaRetornos = new ArrayList<>();
+		
+		if(!academias.isEmpty()) {
+			for (Academia academia : academias) {
+				List<Aluno> listaAlunos = alunoRepository.findAlunoPorAcademia(academia.getIdAcademia());
+				List<AlunoSemAcademiaDTO> listaAlunosDTO = new ArrayList<>();
+				
+				for (Aluno aluno : listaAlunos) {
+					AlunoSemAcademiaDTO alunosDTO = modelMapper.map(aluno, AlunoSemAcademiaDTO.class);
+					listaAlunosDTO.add(alunosDTO);			
+				}
+				
+				AcademiaDTO academiaDTO = modelMapper.map(academia, AcademiaDTO.class);
+				academiaDTO.setListaAlunos(listaAlunosDTO);
+				listaRetornos.add(academiaDTO);				
+			}
+		}
+		return listaRetornos;
+	}
+	
+	
 	@Override
 	public AcademiaDTO salvarAcademia(AcademiaDTO academiaDTO) {
 		Academia academia = modelMapper.map(academiaDTO, Academia.class);

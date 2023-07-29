@@ -36,4 +36,8 @@ public class Aluno implements Serializable{
 	@JoinColumn(name = "turma_id")
 	private Turma turma;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "academia_id")
+	private Academia academia;
+	
 }

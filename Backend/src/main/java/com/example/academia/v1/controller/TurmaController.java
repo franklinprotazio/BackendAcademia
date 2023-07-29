@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.academia.core.entity.Aluno;
+import com.example.academia.core.service.AlunoService;
 import com.example.academia.core.service.TurmaService;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.TurmaDTO;
@@ -24,6 +27,9 @@ public class TurmaController {
 	
 	@Autowired
 	TurmaService turmaService;
+	
+	@Autowired
+	AlunoService alunoService;
 	
 	@Autowired
 	TurmaRepository turmaRepository;
@@ -48,7 +54,10 @@ public class TurmaController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(turmaRetornoDTO);
 	}
+	
 
+    
 }
+
 
 

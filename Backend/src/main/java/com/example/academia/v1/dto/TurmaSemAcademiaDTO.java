@@ -1,7 +1,5 @@
 package com.example.academia.v1.dto;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -14,7 +12,7 @@ private Long idTurma;
 	
 	private String curso;
 	
-	private Date horario;
+	private String horario;
 	
 	private String nomeProfessor;
 }

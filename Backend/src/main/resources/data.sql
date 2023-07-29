@@ -9,7 +9,7 @@ CREATE TABLE tb_turma
 (
     id_turma IDENTITY NOT NULL PRIMARY KEY,
     curso VARCHAR(50) NOT NULL,
-    horario TIMESTAMP WITH TIME ZONE NOT NULL,
+    horario VARCHAR(50) NOT NULL,
     nome_professor VARCHAR(50) NOT NULL,
     academia_id INT NOT NULL,
 
@@ -25,8 +25,13 @@ CREATE TABLE tb_aluno
     data_matricula TIMESTAMP WITH TIME ZONE NOT NULL,
     nome_aluno VARCHAR(50) NOT NULL,
     turma_id INT NOT NULL,
+    academia_id INT NOT NULL,
 
-        CONSTRAINT FK_TB_TURMA
+        CONSTRAINT FK_TB_TURMA_ALUNO
         FOREIGN KEY (turma_id)
-        REFERENCES tb_turma(id_turma)
+        REFERENCES tb_turma(id_turma),
+        
+         CONSTRAINT FK_TB_ACADEMIA_ALUNO
+        FOREIGN KEY (academia_id)
+        REFERENCES tb_academia(id_academia)
 );

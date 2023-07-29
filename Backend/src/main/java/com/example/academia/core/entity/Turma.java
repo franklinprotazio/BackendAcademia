@@ -1,7 +1,6 @@
 package com.example.academia.core.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +29,7 @@ public class Turma implements Serializable{
 	private String curso;
 	
 	@Column(name = "horario")
-	private Date horario;
+	private String horario;
 	
 	@Column(name = "nome_professor")
 	private String nomeProfessor;

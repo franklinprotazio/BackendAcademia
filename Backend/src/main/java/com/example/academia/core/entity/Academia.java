@@ -24,6 +24,6 @@ public class Academia implements Serializable {
 	
 	@Column(name = "nome_academia")
 	private String nomeAcademia;
-
+	
 
 }

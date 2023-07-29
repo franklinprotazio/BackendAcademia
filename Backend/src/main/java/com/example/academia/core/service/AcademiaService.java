@@ -7,6 +7,8 @@ import com.example.academia.v1.dto.AcademiaDTO;
 public interface AcademiaService {
 	
 	List<AcademiaDTO> getAcademias();
+
+	public List<AcademiaDTO> getAcademiasComAlunos() ;
 	
 	AcademiaDTO salvarAcademia(AcademiaDTO academiaDTO);
 	

@@ -44,6 +44,18 @@ public class AcademiaController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontradas academias na base de dados");
 	}
 	
+	@GetMapping("/alunos")
+	public ResponseEntity<Object> getAcademiasComAlunos() {
+		
+		List<AcademiaDTO> academiasDTO = academiaService.getAcademiasComAlunos();
+		
+		if(!academiasDTO.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(academiasDTO);
+		}
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontradas academias na base de dados");
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> buscarAcademiaPorId(@PathVariable(value = "id") @Valid Long idAcademia) {
 		

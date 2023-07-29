@@ -15,8 +15,11 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
 	
 	// Selecione da tabela Aluno onde
-	@Query(value = "SELECT * FROM Aluno as t WHERE t.turma_id = :id", nativeQuery = true)
-	List<Aluno> findAlunoPorTurma(Long id);
+	@Query(value = "SELECT * FROM TB_ALUNO as t WHERE t.turma_id = :turma_id", nativeQuery = true)
+	List<Aluno> findAlunoPorTurma(@Param("turma_id") Long id);
+	
+	@Query(value = "SELECT * FROM Aluno as t WHERE t.academia_id = :idAcademia", nativeQuery = true)
+	List<Aluno> findAlunoPorAcademia(@Param("idAcademia") Long idAcademia);
 	
 	@Modifying
 	@Query(value = "DELETE FROM Aluno as t WHERE t.turma_id = :turma_id", nativeQuery = true)

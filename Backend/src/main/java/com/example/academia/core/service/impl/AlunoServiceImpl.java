@@ -51,6 +51,7 @@ public class AlunoServiceImpl implements AlunoService {
 	public AlunoDTO salvarAluno (AlunoDTO alunoDTO) {
 		
 		Aluno aluno = modelMapper.map(alunoDTO, Aluno.class);
+	
 		AlunoDTO alunoRetornoDTO = modelMapper.map(alunoRepository.save(aluno), AlunoDTO.class);
 		
 		return alunoRetornoDTO;

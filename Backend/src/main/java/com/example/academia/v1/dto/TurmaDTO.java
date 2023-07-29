@@ -1,6 +1,5 @@
 package com.example.academia.v1.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +15,7 @@ public class TurmaDTO {
 	
 	private String curso;
 	
-	private Date horario;
+	private String horario;
 	
 	private String nomeProfessor;
 

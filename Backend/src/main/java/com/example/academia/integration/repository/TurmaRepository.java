@@ -14,14 +14,9 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 	@Modifying
 	@Query(value = "DELETE FROM Turma as t WHERE t.academia_id = :academia_id", nativeQuery = true)
 	void deletarTurmaPorAcademia(@Param("academia_id")Long idAcademia);
-
-
-//	@Query(value = "SELECT * FROM Turma as t WHERE t.academia_id = :academia_id", nativeQuery = true)
-//	List<Turma> findTurmaPorAcademia(Long idAcademia);
 	
 	@Query(value = "SELECT * FROM Turma as t WHERE t.academia_id = :idAcademia", nativeQuery = true)
 	List<Turma> findTurmaPorAcademia(@Param("idAcademia") Long idAcademia);
-
 
 	List<Turma> findByCurso(String cursoTurma);
 
@@ -29,6 +24,5 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 		       + "(:horario IS NULL OR :horario = '' OR t.horario = :horario) "
 		       + "AND (:curso IS NULL OR :curso = '' OR t.curso = :curso)")
 		List<Turma> getTurmas(@Param("horario") String horario, @Param("curso") String curso);
-
 
 }
