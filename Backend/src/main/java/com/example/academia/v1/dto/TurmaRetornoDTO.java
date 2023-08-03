@@ -15,5 +15,7 @@ public class TurmaRetornoDTO {
 	private String horario;
 
 	private String nomeProfessor;
+	
+	private int qtoAluno;
 
 }

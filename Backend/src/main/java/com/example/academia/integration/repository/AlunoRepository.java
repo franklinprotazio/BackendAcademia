@@ -15,15 +15,15 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
 	
 	// Selecione da tabela Aluno onde
-	@Query(value = "SELECT * FROM TB_ALUNO as t WHERE t.turma_id = :turma_id", nativeQuery = true)
-	List<Aluno> findAlunoPorTurma(@Param("turma_id") Long id);
+	@Query(value = "SELECT * FROM Aluno as t WHERE t.turma_id = :idTurma", nativeQuery = true)
+	List<Aluno> findAlunoPorTurma(@Param("idTurma") Long idTurma);
 	
 	@Query(value = "SELECT * FROM Aluno as t WHERE t.academia_id = :idAcademia", nativeQuery = true)
 	List<Aluno> findAlunoPorAcademia(@Param("idAcademia") Long idAcademia);
 	
 	@Modifying
-	@Query(value = "DELETE FROM Aluno as t WHERE t.turma_id = :turma_id", nativeQuery = true)
-	void deletarAlunoPorTurma(@Param ("turma_id") Long idTurma);
+	@Query(value = "DELETE FROM Aluno as t WHERE t.turma_id = :idTurma", nativeQuery = true)
+	void deletarAlunoPorTurma(@Param ("idTurma") Long idTurma);
 	
 //	boolean deleteAllAcademia(Academia academia);
 	
@@ -33,4 +33,3 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 		List<Aluno> getAlunos(@Param("inicio") String inicio, @Param("fim") String fim, @Param("nome") String nome);
 	
 }
-

@@ -16,7 +16,7 @@ public class AlunoDTO {
 	
 	private Date dataMatricula;
 	
-	private TurmaRetornoDTO turma;
+	private TurmaRetornoDTOSemQtoAluno turma;
 	
 	private AcademiaRetornoDTO academia;
 

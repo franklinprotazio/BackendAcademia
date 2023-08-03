@@ -34,7 +34,14 @@ public class Turma implements Serializable{
 	@Column(name = "nome_professor")
 	private String nomeProfessor;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(name = "qto_Aluno")
+	private int qtoAluno;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "aluno_id")
+	private Aluno aluno;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "academia_id")
 	private Academia academia;
 

@@ -32,11 +32,11 @@ public class Aluno implements Serializable{
 	@Column(name = "data_matricula")
 	private Date dataMatricula;
 		
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "turma_id")
 	private Turma turma;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "academia_id")
 	private Academia academia;
 	

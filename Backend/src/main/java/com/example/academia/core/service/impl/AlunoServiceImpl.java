@@ -14,14 +14,19 @@ import com.example.academia.core.entity.Turma;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.service.AlunoService;
 import com.example.academia.integration.repository.AlunoRepository;
+import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AlunoDTO;
 import com.example.academia.v1.dto.TurmaRetornoDTO;
+import com.example.academia.v1.dto.TurmaRetornoDTOSemQtoAluno;
 
 @Service
 public class AlunoServiceImpl implements AlunoService {
 	
 	@Autowired
 	private AlunoRepository alunoRepository;
+	
+	@Autowired
+	private TurmaRepository turmaRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -53,6 +58,16 @@ public class AlunoServiceImpl implements AlunoService {
 		Aluno aluno = modelMapper.map(alunoDTO, Aluno.class);
 	
 		AlunoDTO alunoRetornoDTO = modelMapper.map(alunoRepository.save(aluno), AlunoDTO.class);
+		
+		TurmaRetornoDTOSemQtoAluno turmaDTO = alunoRetornoDTO.getTurma();
+		TurmaRetornoDTO turma = new TurmaRetornoDTO();
+		if (turmaDTO != null) {
+		    int qtoAlunoAtual = turma.getQtoAluno();
+		    turma.setQtoAluno(qtoAlunoAtual + 1);
+		    turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno());
+		}
+
+		
 		
 		return alunoRetornoDTO;
 	}
@@ -95,7 +110,7 @@ public class AlunoServiceImpl implements AlunoService {
 		alunoDTO.setDataMatricula(aluno.getDataMatricula());
 		alunoDTO.setIdAluno(aluno.getIdAluno());
 		alunoDTO.setNomeAluno(aluno.getNomeAluno());
-		TurmaRetornoDTO turmaRetornoDTO = modelMapper.map(aluno.getTurma(), TurmaRetornoDTO.class);
+		TurmaRetornoDTOSemQtoAluno turmaRetornoDTO = modelMapper.map(aluno.getTurma(), TurmaRetornoDTOSemQtoAluno.class);
 		alunoDTO.setTurma(turmaRetornoDTO);
 		
 		return alunoDTO;
@@ -121,8 +136,3 @@ public class AlunoServiceImpl implements AlunoService {
 	}
 	
 }
-
-
-
-
-

@@ -18,6 +18,8 @@ public class TurmaDTO {
 	private String horario;
 	
 	private String nomeProfessor;
+	
+	private int qtoAluno;
 
 	@NotNull
 	private AcademiaRetornoDTO academia;

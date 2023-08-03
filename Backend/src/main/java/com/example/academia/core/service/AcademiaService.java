@@ -8,7 +8,7 @@ public interface AcademiaService {
 	
 	List<AcademiaDTO> getAcademias();
 
-	public List<AcademiaDTO> getAcademiasComAlunos() ;
+	List<AcademiaDTO> getAcademiasComAlunos() ;
 	
 	AcademiaDTO salvarAcademia(AcademiaDTO academiaDTO);
 	
@@ -17,5 +17,7 @@ public interface AcademiaService {
 	AcademiaDTO buscarAcademiaPorId(Long id);
 	
 	AcademiaDTO atualizarAcademia(Long idAcademia, AcademiaDTO academia);
+
+	List<AcademiaDTO> getAcademiasComTurmas();
 
 }
