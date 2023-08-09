@@ -2,22 +2,20 @@ package com.example.academia.v1.dto;
 
 import java.util.List;
 
-import com.example.academia.core.entity.Professor;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TurmaRetornoDTOSemQtoAluno {
-	private Long idTurma;
+public class ProfessorSemAcademiaDTO {
 
-	private String curso;
+	private Long idProfessor;
 
-	private String horario;
+	private String nomeProfessor;
 	
-	private Professor professor;
+	private TurmaSemAcademiaDTO turma;
 	
 	private List<TurmaSemAcademiaDTO> turmas;
-
+	
 }

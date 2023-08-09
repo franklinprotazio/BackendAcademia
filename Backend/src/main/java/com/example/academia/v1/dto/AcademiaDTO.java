@@ -19,7 +19,9 @@ public class AcademiaDTO {
 	private List<TurmaSemAcademiaDTO> turmas;
 	
 	private List<AlunoSemTurmaDTO> alunos;
-
+	
+	private List<ProfessorSemAcademiaDTO> professores;
+	
 	private List<AlunoSemAcademiaDTO> listaAlunos; 
 
 }

@@ -9,11 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.academia.core.entity.Academia;
+import com.example.academia.core.entity.Aluno;
+import com.example.academia.core.entity.Professor;
 import com.example.academia.core.entity.Turma;
+import com.example.academia.core.enums.StatusTurmaeNUM;
+import com.example.academia.core.exception.AlunoMatriculadoException;
+import com.example.academia.core.exception.AlunoNaoMatriculadoException;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
+import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.service.TurmaService;
+import com.example.academia.integration.repository.AlunoRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AcademiaRetornoDTO;
+import com.example.academia.v1.dto.MatriculaDTO;
 import com.example.academia.v1.dto.TurmaDTO;
 
 @Service
@@ -23,6 +31,9 @@ public class TurmaServiceImpl implements TurmaService {
 
 	@Autowired
 	private TurmaRepository turmaRepository;
+
+	@Autowired
+	private AlunoRepository alunoRepository;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -49,10 +60,26 @@ public class TurmaServiceImpl implements TurmaService {
 
 	@Override
 	public TurmaDTO salvarTurma(TurmaDTO turmaDTO) {
+
 		Turma turma = modelMapper.map(turmaDTO, Turma.class);
+
+		turma.setStatus(StatusTurmaeNUM.INATIVA);
+
 		TurmaDTO turmaRetornoDTO = modelMapper.map(turmaRepository.save(turma), TurmaDTO.class);
 
 		return turmaRetornoDTO;
+	}
+
+	@Override
+	public StatusTurmaeNUM ativarTurma(Long idTurma) throws EntidadeNaoEncontradaException {
+
+		Turma turma = turmaRepository.findById(idTurma).orElseThrow(
+				() -> new EntidadeNaoEncontradaException("Não foi possivel localizar turma com o id " + idTurma));
+
+		turma.setStatus(StatusTurmaeNUM.ATIVA);
+		turma = turmaRepository.save(turma);
+
+		return turma.getStatus();
 	}
 
 	@Override
@@ -110,12 +137,66 @@ public class TurmaServiceImpl implements TurmaService {
 
 		turmaDTO.setIdTurma(turma.getIdTurma());
 		turmaDTO.setCurso(turma.getCurso());
-		turmaDTO.setNomeProfessor(turma.getNomeProfessor());
+		turmaDTO.setProfessor(turma.getProfessor());
 		turmaDTO.setHorario(turma.getHorario());
 		AcademiaRetornoDTO academiaRetornoDTO = modelMapper.map(turma.getAcademia(), AcademiaRetornoDTO.class);
 		turmaDTO.setAcademia(academiaRetornoDTO);
 		return turmaDTO;
 
+	}
+
+	@Override
+	public TurmaDTO matricularAlunoEmTurma(MatriculaDTO matriculaDTO) throws EntidadeNaoEncontradaException,
+			TurmaInativaException, AlunoNaoMatriculadoException, AlunoMatriculadoException {
+
+		TurmaDTO turmaDTO;
+
+		Turma turma = turmaRepository.findById(matriculaDTO.getIdTurma())
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Turma não encontrada"));
+
+		Aluno aluno = alunoRepository.findById(matriculaDTO.getIdAluno())
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Não foi possível encontrar o aluno"));
+
+		if (turma.getStatus() == StatusTurmaeNUM.INATIVA || turma.getStatus() == StatusTurmaeNUM.INDISPONIVEL) {
+
+			throw new TurmaInativaException("A turma com o id está inativa ou indisponivel");
+		}
+
+		if (aluno.getTurmas().size() >= 2) {
+			throw new AlunoNaoMatriculadoException("Aluno não matriculado");
+		}
+
+		for (Turma turmaDoAluno : aluno.getTurmas()) {
+
+			if (turmaDoAluno.getIdTurma().equals(turma.getIdTurma())) {
+
+				throw new AlunoMatriculadoException("Aluno já está matriculado nesta turma");
+			}
+
+			if (turma.getHorario().equals(turmaDoAluno.getHorario())) {
+				throw new AlunoNaoMatriculadoException("Aluno já está matriculado em outra turma com o mesmo horário");
+			}
+		}
+
+		turma.getAlunos().add(aluno);
+
+		incrementarQuantidadeAlunoNaTurma(turma);
+
+		turma = turmaRepository.save(turma);
+
+		return modelMapper.map(turma, TurmaDTO.class);
+
+	}
+
+	public TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma) {
+
+		turma.setQtoAluno(turma.getQtoAluno() + 1);
+		turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno());
+
+		if (turma.getQtoAluno() == 2) {
+		}
+
+		return modelMapper.map(turma, TurmaDTO.class);
 	}
 
 }

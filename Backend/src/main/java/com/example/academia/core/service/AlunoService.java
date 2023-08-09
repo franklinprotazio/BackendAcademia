@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.example.academia.core.entity.Turma;
 import com.example.academia.v1.dto.AlunoDTO;
+import com.example.academia.v1.dto.MatriculaDTO;
+import com.example.academia.v1.dto.TurmaDTO;
 
 public interface AlunoService {
 

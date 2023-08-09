@@ -2,6 +2,7 @@ package com.example.academia.core.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -32,12 +34,15 @@ public class Aluno implements Serializable{
 	@Column(name = "data_matricula")
 	private Date dataMatricula;
 		
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "turma_id")
-	private Turma turma;
+	@ManyToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
+	private List<Turma> turmas;
+	
+//	@ManyToMany(mappedBy = "professores", fetch = FetchType.EAGER)
+//	private List<Professor> professores;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "academia_id")
 	private Academia academia;
+
 	
 }

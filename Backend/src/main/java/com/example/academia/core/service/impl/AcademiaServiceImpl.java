@@ -10,14 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.academia.core.entity.Academia;
 import com.example.academia.core.entity.Aluno;
+import com.example.academia.core.entity.Professor;
 import com.example.academia.core.entity.Turma;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.service.AcademiaService;
 import com.example.academia.integration.repository.AcademiaRepository;
 import com.example.academia.integration.repository.AlunoRepository;
+import com.example.academia.integration.repository.ProfessorRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AcademiaDTO;
 import com.example.academia.v1.dto.AlunoSemAcademiaDTO;
+import com.example.academia.v1.dto.ProfessorSemAcademiaDTO;
 import com.example.academia.v1.dto.TurmaSemAcademiaDTO;
 
 @Service
@@ -33,6 +36,9 @@ public class AcademiaServiceImpl implements AcademiaService {
 
 	@Autowired
 	private AlunoRepository alunoRepository;
+
+	@Autowired
+	private ProfessorRepository professorRepository;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -61,9 +67,19 @@ public class AcademiaServiceImpl implements AcademiaService {
 					listaAlunosDTO.add(alunosDTO);
 				}
 
+				List<Professor> listaProfessores = professorRepository.findProfessorPorAcademia(academia.getIdAcademia());
+				List<ProfessorSemAcademiaDTO> listaProfessoresDTO = new ArrayList<>();
+				
+				for (Professor professor : listaProfessores) {
+					ProfessorSemAcademiaDTO professoresDTO = modelMapper.map(professor, ProfessorSemAcademiaDTO.class);
+					listaProfessoresDTO.add(professoresDTO);
+
+				}
+
 				AcademiaDTO academiaDTO = modelMapper.map(academia, AcademiaDTO.class);
 				academiaDTO.setTurmas(listaTurmasDTO);
 				academiaDTO.setListaAlunos(listaAlunosDTO);
+				academiaDTO.setProfessores(listaProfessoresDTO);
 				listaRetornos.add(academiaDTO);
 			}
 		}
@@ -86,8 +102,7 @@ public class AcademiaServiceImpl implements AcademiaService {
 					AlunoSemAcademiaDTO alunosDTO = modelMapper.map(aluno, AlunoSemAcademiaDTO.class);
 					listaAlunosDTO.add(alunosDTO);
 				}
-				
-				
+
 				List<Turma> listaTurmas = turmaRepository.findTurmaPorAcademia(academia.getIdAcademia());
 				List<TurmaSemAcademiaDTO> listaTurmasDTO = new ArrayList<>();
 
@@ -166,10 +181,31 @@ public class AcademiaServiceImpl implements AcademiaService {
 			turmasDTO.add(turmaSemAcademiaDTO);
 		}
 
-		// Definir as turmas no DTO da academia
 		academiaDTO.setTurmas(turmasDTO);
 
+		List<Aluno> listaAlunos = alunoRepository.findAlunoPorAcademia(academia.getIdAcademia());
+		List<AlunoSemAcademiaDTO> listaAlunosDTO = new ArrayList<>();
+
+		for (Aluno aluno : listaAlunos) {
+			AlunoSemAcademiaDTO alunosDTO = modelMapper.map(aluno, AlunoSemAcademiaDTO.class);
+			listaAlunosDTO.add(alunosDTO);
+		}
+
+		academiaDTO.setListaAlunos(listaAlunosDTO);
+		
+		List<Professor> listaProfessores = professorRepository.findProfessorPorAcademia(academia.getIdAcademia());
+		List<ProfessorSemAcademiaDTO> listaProfessoresDTO = new ArrayList<>();
+		
+		for (Professor professor : listaProfessores) {
+			ProfessorSemAcademiaDTO professoresDTO = modelMapper.map(professor, ProfessorSemAcademiaDTO.class);
+			listaProfessoresDTO.add(professoresDTO);
+
+		}
+
+		academiaDTO.setProfessores(listaProfessoresDTO);
+
 		return academiaDTO;
+
 	}
 
 	@Override

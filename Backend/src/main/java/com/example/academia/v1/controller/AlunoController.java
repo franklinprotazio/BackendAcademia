@@ -67,4 +67,6 @@ public class AlunoController {
 		alunosDTO = alunoService.buscarAlunoPorNome(nomeAluno);
 		return ResponseEntity.status(HttpStatus.OK).body(alunosDTO);
 	}
+	
+
 }

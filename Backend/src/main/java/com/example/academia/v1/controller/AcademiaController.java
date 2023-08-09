@@ -14,9 +14,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.academia.core.exception.AlunoMatriculadoException;
+import com.example.academia.core.exception.AlunoNaoMatriculadoException;
+import com.example.academia.core.exception.EntidadeNaoEncontradaException;
+import com.example.academia.core.exception.TurmaInativaException;
+import com.example.academia.core.exception.TurmaJaVinculadaException;
+import com.example.academia.core.exception.TurmaNaoVinculadaException;
 import com.example.academia.core.service.AcademiaService;
+import com.example.academia.core.service.ProfessorService;
+import com.example.academia.core.service.TurmaService;
 import com.example.academia.integration.repository.AlunoRepository;
 import com.example.academia.v1.dto.AcademiaDTO;
+import com.example.academia.v1.dto.MatriculaDTO;
+import com.example.academia.v1.dto.ProfessorDTO;
+import com.example.academia.v1.dto.TurmaDTO;
+import com.example.academia.v1.dto.VincularProfessorDTO;
 
 import jakarta.validation.Valid;
 
@@ -32,6 +44,12 @@ public class AcademiaController {
 	@Autowired
 	AcademiaService academiaService;
 	
+	@Autowired
+	TurmaService turmaService;
+	
+	@Autowired
+	ProfessorService professorService;
+	
 	@GetMapping
 	public ResponseEntity<Object> getAcademias() {
 		
@@ -44,17 +62,6 @@ public class AcademiaController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontradas academias na base de dados");
 	}
 	
-	@GetMapping("/alunos")
-	public ResponseEntity<Object> getAcademiasComAlunos() {
-		
-		List<AcademiaDTO> academiasDTO = academiaService.getAcademiasComAlunos();
-		
-		if(!academiasDTO.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(academiasDTO);
-		}
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontradas academias na base de dados");
-	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> buscarAcademiaPorId(@PathVariable(value = "id") @Valid Long idAcademia) {
@@ -92,6 +99,66 @@ public class AcademiaController {
 		academiaService.deletarAcademia(idAcademia);
 		
 		return ResponseEntity.status(HttpStatus.OK).body("Academia excluída com sucesso");
+	}
+	
+	@PutMapping("/matricular/{idTurma}/aluno/{idAluno}")
+	
+	public ResponseEntity<Object> matricularAlunoEmTurma(@PathVariable Long idTurma, @PathVariable Long idAluno)  {
+		
+		MatriculaDTO matriculaDTO = new MatriculaDTO(); 
+		
+		matriculaDTO.setIdTurma(idTurma);
+        matriculaDTO.setIdAluno(idAluno);
+		
+		TurmaDTO turmaRetorno;
+		
+		try {
+			turmaRetorno = turmaService.matricularAlunoEmTurma(matriculaDTO);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno com id " + matriculaDTO.getIdAluno()
+					+ " não encontrado ou turma com id " + matriculaDTO.getIdTurma() + " inativa");
+		} catch (AlunoNaoMatriculadoException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Não foi possivel matricular o aluno, pois o aluno já está matriculado em duas turmas");			
+		} catch (AlunoMatriculadoException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+					.body("Aluno já está matriculado nesta turma");
+		} catch (TurmaInativaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Turma inativa ou indisponivel");
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body("Aluno matriculado");
+	}
+	
+	
+	
+	@PutMapping("/vincular/{idProfessor}/turma/{idTurma}")
+	
+	public ResponseEntity<Object> vincularProfessorEmTurma(@PathVariable Long idProfessor, @PathVariable Long idTurma)  {
+		
+		VincularProfessorDTO vincularProfessorDTO = new VincularProfessorDTO(); 
+			
+		vincularProfessorDTO.setIdProfessor(idProfessor);
+		vincularProfessorDTO.setIdTurma(idTurma);
+		
+		ProfessorDTO professorRetorno;
+		
+		try {
+			professorRetorno = professorService.vincularProfessorEmTurma(vincularProfessorDTO);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Professor com id " + vincularProfessorDTO.getIdTurma()
+					+ " não encontrado ou turma com id " + vincularProfessorDTO.getIdTurma() + " inativa");
+		} catch (TurmaNaoVinculadaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Não foi possivel vincular o professor, pois o professor já está vinculado em uma turma com o mesmo horario");			
+		} catch (TurmaJaVinculadaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+					.body("Professor já está vinculado nesta turma");
+		} catch (TurmaInativaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Turma inativa ou indisponivel");
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body("Professor Vinculado");
 	}
 
 }

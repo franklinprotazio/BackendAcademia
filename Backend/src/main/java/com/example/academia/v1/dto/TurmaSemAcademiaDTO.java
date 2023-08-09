@@ -2,6 +2,7 @@ package com.example.academia.v1.dto;
 
 import java.util.List;
 
+import com.example.academia.core.enums.StatusTurmaeNUM;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -19,8 +20,10 @@ public class TurmaSemAcademiaDTO {
 	private String nomeProfessor;
 	
 	private int qtoAluno;
+	
+	private StatusTurmaeNUM status;
 
-	private List<AlunoSemAcademiaDTO> listaAlunos;
+	private List<AlunoSemAcademiaDTO> alunosMatriculados;
 	
 
 	

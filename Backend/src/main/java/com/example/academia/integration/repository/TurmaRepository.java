@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.academia.core.entity.Turma;
+import com.example.academia.core.enums.StatusTurmaeNUM;
 
 public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
@@ -31,7 +32,7 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 	@Query("UPDATE Turma t SET t.qtoAluno = t.qtoAluno + ?1")
 	void atualizarQuantidadeAlunos(int qtoAluno);	
 
-	
+
 
 	
 

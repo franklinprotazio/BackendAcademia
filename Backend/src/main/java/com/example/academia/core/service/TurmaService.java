@@ -3,6 +3,13 @@ package com.example.academia.core.service;
 import java.util.List;
 
 import com.example.academia.core.entity.Academia;
+import com.example.academia.core.entity.Turma;
+import com.example.academia.core.enums.StatusTurmaeNUM;
+import com.example.academia.core.exception.AlunoMatriculadoException;
+import com.example.academia.core.exception.AlunoNaoMatriculadoException;
+import com.example.academia.core.exception.EntidadeNaoEncontradaException;
+import com.example.academia.core.exception.TurmaInativaException;
+import com.example.academia.v1.dto.MatriculaDTO;
 import com.example.academia.v1.dto.TurmaDTO;
 
 public interface TurmaService {
@@ -19,6 +26,14 @@ public interface TurmaService {
 	List<TurmaDTO> buscarTurmaPorCurso(String cursoTurma);
 
 	List<TurmaDTO> getTurmas(String horario, String nome);
+
+	TurmaDTO matricularAlunoEmTurma(MatriculaDTO matriculaDTO) throws EntidadeNaoEncontradaException, TurmaInativaException, AlunoNaoMatriculadoException, AlunoMatriculadoException;
+
+	StatusTurmaeNUM ativarTurma(Long idTurma);
+	
+	TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma);
+
+//	TurmaDTO matricularAlunoEmTurma(Long idTurma, Long idAluno)  throws EntidadeNaoEncontradaException, TurmaInativaException, AlunoNaoMatriculadoException ;
 	
 	
 }

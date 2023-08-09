@@ -16,11 +16,12 @@ import com.example.academia.core.service.AlunoService;
 import com.example.academia.integration.repository.AlunoRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AlunoDTO;
-import com.example.academia.v1.dto.TurmaRetornoDTO;
 import com.example.academia.v1.dto.TurmaRetornoDTOSemQtoAluno;
 
 @Service
 public class AlunoServiceImpl implements AlunoService {
+	
+	private static final String MENSAGEM_ALUNO_INESISTENTE = "Não foi possivel encontrar o aluno com o id = ";
 	
 	@Autowired
 	private AlunoRepository alunoRepository;
@@ -58,17 +59,7 @@ public class AlunoServiceImpl implements AlunoService {
 		Aluno aluno = modelMapper.map(alunoDTO, Aluno.class);
 	
 		AlunoDTO alunoRetornoDTO = modelMapper.map(alunoRepository.save(aluno), AlunoDTO.class);
-		
-		TurmaRetornoDTOSemQtoAluno turmaDTO = alunoRetornoDTO.getTurma();
-		TurmaRetornoDTO turma = new TurmaRetornoDTO();
-		if (turmaDTO != null) {
-		    int qtoAlunoAtual = turma.getQtoAluno();
-		    turma.setQtoAluno(qtoAlunoAtual + 1);
-		    turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno());
-		}
 
-		
-		
 		return alunoRetornoDTO;
 	}
 		
@@ -76,7 +67,7 @@ public class AlunoServiceImpl implements AlunoService {
 	public AlunoDTO buscarAlunoPorId(Long idAluno) throws EntidadeNaoEncontradaException  {
 		
 		Aluno aluno = alunoRepository.findById(idAluno).orElseThrow(
-				() -> new EntidadeNaoEncontradaException("Não foi encontrado um recurso com o ID: " + idAluno ));
+				() -> new EntidadeNaoEncontradaException(MENSAGEM_ALUNO_INESISTENTE + idAluno ));
 		AlunoDTO alunoDTO = modelMapper.map(aluno, AlunoDTO.class);
 		
 		return alunoDTO;
@@ -86,7 +77,7 @@ public class AlunoServiceImpl implements AlunoService {
 	public void deletarAlunoPorId(Long idAluno) throws EntidadeNaoEncontradaException {
 		
 		Aluno alunoRetorno = alunoRepository.findById(idAluno).orElseThrow(
-				() -> new EntidadeNaoEncontradaException("Erro"));
+				() -> new EntidadeNaoEncontradaException(MENSAGEM_ALUNO_INESISTENTE + idAluno));
 		
 		alunoRepository.deleteById(idAluno);
 	}
@@ -110,7 +101,7 @@ public class AlunoServiceImpl implements AlunoService {
 		alunoDTO.setDataMatricula(aluno.getDataMatricula());
 		alunoDTO.setIdAluno(aluno.getIdAluno());
 		alunoDTO.setNomeAluno(aluno.getNomeAluno());
-		TurmaRetornoDTOSemQtoAluno turmaRetornoDTO = modelMapper.map(aluno.getTurma(), TurmaRetornoDTOSemQtoAluno.class);
+		TurmaRetornoDTOSemQtoAluno turmaRetornoDTO = modelMapper.map(aluno.getTurmas(), TurmaRetornoDTOSemQtoAluno.class);
 		alunoDTO.setTurma(turmaRetornoDTO);
 		
 		return alunoDTO;
@@ -134,5 +125,6 @@ public class AlunoServiceImpl implements AlunoService {
 		
 		return alunosDTO;
 	}
+	
 	
 }

@@ -1,6 +1,7 @@
 package com.example.academia.v1.dto;
 
 import java.time.Instant;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,5 +18,7 @@ public class AlunoSemAcademiaDTO {
 	private Instant dataMatricula;
 	
 	private TurmaSemAcademiaDTO turma;
+	
+	private List<TurmaSemAcademiaDTO> turmas;
 
 }

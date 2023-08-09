@@ -1,5 +1,6 @@
 package com.example.academia.v1.dto;
 
+import com.example.academia.core.entity.Aluno;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -16,6 +17,10 @@ public class TurmaRetornoDTO {
 
 	private String nomeProfessor;
 	
+	private Aluno aluno;
+	
 	private int qtoAluno;
+	
+	private int qtoProfessor;
 
 }
