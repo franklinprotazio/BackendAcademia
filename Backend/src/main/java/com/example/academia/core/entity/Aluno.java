@@ -36,10 +36,7 @@ public class Aluno implements Serializable{
 		
 	@ManyToMany(mappedBy = "alunos", fetch = FetchType.EAGER)
 	private List<Turma> turmas;
-	
-//	@ManyToMany(mappedBy = "professores", fetch = FetchType.EAGER)
-//	private List<Professor> professores;
-	
+		
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "academia_id")
 	private Academia academia;
