@@ -18,11 +18,14 @@ public class AlunoDTO {
 	private String nomeAluno;
 	
 	private Date dataMatricula;
-	
+		
 	private AcademiaRetornoDTO academia;
 	
 	private TurmaRetornoDTOSemQtoAluno turma;
 	
 	private List<TurmaSemAcademiaDTO> turmas;
-
+	
+	private List<EnderecoSemAlunoDTO> enderecos;
+	
+	private List<ContatoSemAlunoDTO> contatos;
 }

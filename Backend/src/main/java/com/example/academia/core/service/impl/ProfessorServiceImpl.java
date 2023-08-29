@@ -12,6 +12,8 @@ import com.example.academia.core.entity.Professor;
 import com.example.academia.core.entity.Turma;
 import com.example.academia.core.enums.StatusTurmaeNUM;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
+import com.example.academia.core.exception.ProfessorVinculadoException;
+import com.example.academia.core.exception.TurmaHorarioOcupadoException;
 import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.exception.TurmaJaVinculadaException;
 import com.example.academia.core.exception.TurmaNaoVinculadaException;
@@ -19,7 +21,6 @@ import com.example.academia.core.service.ProfessorService;
 import com.example.academia.integration.repository.ProfessorRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.ProfessorDTO;
-import com.example.academia.v1.dto.TurmaRetornoDTOSemQtoProfessor;
 import com.example.academia.v1.dto.VincularProfessorDTO;
 
 @Service
@@ -27,11 +28,13 @@ public class ProfessorServiceImpl implements ProfessorService {
 
 	private static final String MSG_TURMA_ID_INATIVO = "A turma com o id está inativa ou indisponivel";
 
-	private static final String MSG_PROFESSOR_HORARIO_OCUPADO = "O professor já está vinculado a turma com o mesmo horario";
-
 	private static final String MSG_PROFESSOR_JA_VINCULADO = "O professor já está vinculado a esta turma";
 
+	private static final String MSG_TURMA_COM_PROFESSOR = "A turma já tem um professor vinculado";
+
 	private static final String MENSAGEM_PROFESSOR_INESISTENTE = "Não foi possivel encontrar o professor com o id = ";
+
+	private static final String MSG_PROFESSOR_HORARIO_OCUPADO = "O professor já esta vinculado a uma turma com esse mesmo horario";
 
 	@Autowired
 	private ProfessorRepository professorRepository;
@@ -94,15 +97,15 @@ public class ProfessorServiceImpl implements ProfessorService {
 
 	@Override
 	public List<ProfessorDTO> buscarProfessorPorNome(String nomeProfessor) {
-		List<Professor> professors = professorRepository.findByNomeProfessor(nomeProfessor);
-		List<ProfessorDTO> professorsDTO = new ArrayList<>();
+		List<Professor> professores = professorRepository.findByNomeProfessor(nomeProfessor);
+		List<ProfessorDTO> professoresDTO = new ArrayList<>();
 
-		for (Professor professor : professors) {
+		for (Professor professor : professores) {
 			ProfessorDTO professorDTO = convertter(professor);
-			professorsDTO.add(professorDTO);
+			professoresDTO.add(professorDTO);
 		}
 
-		return professorsDTO;
+		return professoresDTO;
 	}
 
 	private ProfessorDTO convertter(Professor professor) {
@@ -110,9 +113,6 @@ public class ProfessorServiceImpl implements ProfessorService {
 
 		professorDTO.setIdProfessor(professor.getIdProfessor());
 		professorDTO.setNomeProfessor(professor.getNomeProfessor());
-		TurmaRetornoDTOSemQtoProfessor turmaRetornoDTO = modelMapper.map(professor.getTurmas(),
-				TurmaRetornoDTOSemQtoProfessor.class);
-		professorDTO.setTurma(turmaRetornoDTO);
 		return professorDTO;
 
 	}
@@ -120,27 +120,26 @@ public class ProfessorServiceImpl implements ProfessorService {
 	@Override
 	public List<ProfessorDTO> getProfessores() {
 
-
 		List<Professor> professores = professorRepository.findAll();
-		List<ProfessorDTO> professorsDTO = new ArrayList<>();
+		List<ProfessorDTO> professoresDTO = new ArrayList<>();
 
 		for (Professor professor : professores) {
-			ProfessorDTO dto = modelMapper.map(professor, ProfessorDTO.class);
-			professorsDTO.add(dto);
+			ProfessorDTO professorDTO = convertter(professor);
+			professoresDTO.add(professorDTO);
 		}
 
-		return professorsDTO;
+		return professoresDTO;
 	}
 
 	@Override
 	public ProfessorDTO vincularProfessorEmTurma(VincularProfessorDTO vincularProfessorDTO)
-			throws TurmaNaoVinculadaException, TurmaJaVinculadaException, TurmaInativaException {
+			throws TurmaNaoVinculadaException, TurmaJaVinculadaException, TurmaInativaException, ProfessorVinculadoException {
 
 		ProfessorDTO professorDTO;
 
 		Professor professor = professorRepository.findById(vincularProfessorDTO.getIdProfessor())
 				.orElseThrow(() -> new EntidadeNaoEncontradaException("Profesosr não encontrado"));
-		
+
 		Turma turma = turmaRepository.findById(vincularProfessorDTO.getIdTurma())
 				.orElseThrow(() -> new EntidadeNaoEncontradaException("Turma não encontrada"));
 
@@ -148,34 +147,37 @@ public class ProfessorServiceImpl implements ProfessorService {
 
 			throw new TurmaInativaException(MSG_TURMA_ID_INATIVO);
 		}
-		
+
 		for (Turma turmaDoProfessor : professor.getTurmas()) {
-			
-			if(isProfessorJaVinculado(turma, turmaDoProfessor)) {
-				throw new TurmaJaVinculadaException(MSG_PROFESSOR_JA_VINCULADO);
+
+			if (isTurmaComProfessor(turma, turmaDoProfessor)) {
+				throw new ProfessorVinculadoException(MSG_TURMA_COM_PROFESSOR);
 			}
 			
 			if (isProfessorHorarioOcupado(turma, turmaDoProfessor)) {
-				throw new TurmaJaVinculadaException(MSG_PROFESSOR_HORARIO_OCUPADO);
-			}
+		        throw new ProfessorVinculadoException(MSG_PROFESSOR_HORARIO_OCUPADO);
+		    }
+
+		}
+
+		if (turma.getProfessor() != null) {
+			throw new TurmaJaVinculadaException(MSG_PROFESSOR_JA_VINCULADO);
 		}
 		
-		professor.getTurmas().add(turma);
 		
-		professor = professorRepository.save(professor);		
+		turma.setProfessor(professor);
+
+		turma = turmaRepository.save(turma);
 
 		return modelMapper.map(professor, ProfessorDTO.class);
 	}
 
+	private boolean isTurmaComProfessor(Turma turma, Turma turmaDoProfessor) {
+
+		return turmaDoProfessor.getProfessor().equals(turma.getProfessor());
+	}
+
 	private boolean isProfessorHorarioOcupado(Turma turma, Turma turmaDoProfessor) {
-		return turma.getHorario().equals(turmaDoProfessor.getHorario());
+	    return turma.getHorario().equals(turmaDoProfessor.getHorario());
 	}
-
-	private boolean isProfessorJaVinculado(Turma turma, Turma turmaDoProfessor) {
-		return turmaDoProfessor.getIdTurma().equals(turma.getIdTurma());
-	}
-
-
-
-
 }

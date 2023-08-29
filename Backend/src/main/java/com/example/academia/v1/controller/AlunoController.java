@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,11 +33,10 @@ public class AlunoController {
 	AlunoRepository alunoRepository;
 
 	@GetMapping()
-	public ResponseEntity<Object> getAlunos(
-			@RequestParam(name = "dataInicio", required = false) String dataInicio,
+	public ResponseEntity<Object> getAlunos(@RequestParam(name = "dataInicio", required = false) String dataInicio,
 			@RequestParam(name = "dataFim", required = false) String dataFim,
 			@RequestParam(name = "nome", required = false) String nome) {
-		
+
 		List<AlunoDTO> lista = alunoService.getAlunos(dataInicio, dataFim, nome);
 		if (lista.size() > 0) {
 			return ResponseEntity.status(HttpStatus.OK).body(lista);
@@ -44,20 +44,20 @@ public class AlunoController {
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foram encontrados alunos com o filtro informado");
 	}
-	
+
 	@PostMapping()
-	public ResponseEntity<Object> salvarAluno(@RequestBody @Valid AlunoDTO alunoDTO){
-		
+	public ResponseEntity<Object> salvarAluno(@RequestBody @Valid AlunoDTO alunoDTO) {
+
 		AlunoDTO alunoRetornoDTo = alunoService.salvarAluno(alunoDTO);
-		
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(alunoRetornoDTo);
-		
+
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deletarAluno(@PathVariable(value = "id") Long idAluno){
+	public ResponseEntity<Object> deletarAluno(@PathVariable(value = "id") Long idAluno) {
 		alunoService.deletarAlunoPorId(idAluno);
-		
+
 		return ResponseEntity.status(HttpStatus.OK).body("Aluno deletado com sucesso");
 	}
 
@@ -67,6 +67,6 @@ public class AlunoController {
 		alunosDTO = alunoService.buscarAlunoPorNome(nomeAluno);
 		return ResponseEntity.status(HttpStatus.OK).body(alunosDTO);
 	}
-	
+
 
 }

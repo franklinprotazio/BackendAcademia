@@ -16,11 +16,9 @@ public class AcademiaDTO {
 	@NotBlank
 	private String nomeAcademia;
 	
-	private List<TurmaSemAcademiaDTO> turmas;
-	
-	private List<AlunoSemTurmaDTO> alunos;
-	
 	private List<ProfessorSemAcademiaDTO> professores;
+	
+	private List<TurmaSemAcademiaDTO> turmas;
 	
 	private List<AlunoSemAcademiaDTO> listaAlunos; 
 

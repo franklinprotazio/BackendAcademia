@@ -3,6 +3,8 @@ package com.example.academia.core.service;
 import java.util.List;
 
 import com.example.academia.core.entity.Turma;
+import com.example.academia.core.exception.ProfessorVinculadoException;
+import com.example.academia.core.exception.TurmaHorarioOcupadoException;
 import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.exception.TurmaJaVinculadaException;
 import com.example.academia.core.exception.TurmaNaoVinculadaException;
@@ -23,7 +25,7 @@ public interface ProfessorService {
 
 	List<ProfessorDTO> buscarProfessorPorNome(String nomeProfessor);
 
-	ProfessorDTO vincularProfessorEmTurma(VincularProfessorDTO vincularProfessorDTO) throws TurmaNaoVinculadaException, TurmaJaVinculadaException, TurmaInativaException;
+	ProfessorDTO vincularProfessorEmTurma(VincularProfessorDTO vincularProfessorDTO) throws TurmaNaoVinculadaException, TurmaJaVinculadaException, TurmaInativaException, ProfessorVinculadoException;
 
 	List<ProfessorDTO> getProfessores();
 	

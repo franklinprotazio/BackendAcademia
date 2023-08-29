@@ -10,21 +10,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.academia.core.exception.AlunoMatriculadoException;
-import com.example.academia.core.exception.AlunoNaoMatriculadoException;
-import com.example.academia.core.exception.EntidadeNaoEncontradaException;
-import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.service.ProfessorService;
 import com.example.academia.integration.repository.ProfessorRepository;
-import com.example.academia.v1.dto.MatriculaDTO;
 import com.example.academia.v1.dto.ProfessorDTO;
-import com.example.academia.v1.dto.TurmaDTO;
 
 import jakarta.validation.Valid;
 
@@ -43,7 +36,7 @@ public class ProfessorController {
 		
 		List<ProfessorDTO> lista = professorService.getProfessores();
 		
-		if (lista != null && lista.isEmpty() ) {
+		if (lista != null && !lista.isEmpty() ) {
 			return ResponseEntity.status(HttpStatus.OK).body(lista);
 		}
 

@@ -41,8 +41,7 @@ public class Turma implements Serializable{
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "professor_id")
 	private Professor professor;
-
-	
+		
 	@Column(name = "qto_Aluno")
 	private int qtoAluno;
 	

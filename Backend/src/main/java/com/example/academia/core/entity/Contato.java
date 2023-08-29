@@ -1,7 +1,6 @@
 package com.example.academia.core.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,29 +10,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Data
-@Table(name = "PROFESSOR")
-public class Professor implements Serializable {
+@Entity
+@Table(name = "CONTATO")
+public class Contato implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_professor")
-	private Long idProfessor;
+	@Column(name = "id_contato")
+	private Long idContato;
+
+	@Column(name = "email")
+	private String email;
 	
-	@Column(name = "nome_Professor")
-	private String nomeProfessor;
+	@Column(name = "telefone")
+	private String telefone;
 	
-	@OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
-	private List<Turma> turmas;
+	@Column(name = "celular")
+	private String celular;
 	
+	@Column(name = "outros_telefones")
+	private String outrosTelefones;
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "academia_id")
-	private Academia academia;
-	
+	@JoinColumn(name = "aluno_id")
+	private Aluno aluno;
+
 }

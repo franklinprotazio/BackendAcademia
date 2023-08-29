@@ -19,7 +19,9 @@ public class ProfessorDTO {
 	@NotBlank
 	private String nomeProfessor;
 	
-	private TurmaRetornoDTOSemQtoProfessor turma;
+//	private ProfessorDTOSemTurma turma;
+	
+	private List<TurmaSemAcademiaDTO> turmasSemAcademias;
 
 	private List<Turma> turmas;
 	

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.example.academia.core.entity.Turma;
 import com.example.academia.v1.dto.AlunoDTO;
-import com.example.academia.v1.dto.MatriculaDTO;
-import com.example.academia.v1.dto.TurmaDTO;
+
+import jakarta.validation.Valid;
 
 public interface AlunoService {
 
@@ -22,6 +22,7 @@ public interface AlunoService {
 	List<AlunoDTO> buscarAlunoPorNome(String nomeAluno);
 
 	List<AlunoDTO> getAlunos(String dataInicio, String dataFim, String nome);
+
 	
 
 }

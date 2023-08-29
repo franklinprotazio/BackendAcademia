@@ -15,7 +15,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
 	
 	// Selecione da tabela Professor onde
-	@Query(value = "SELECT * FROM Professor as t WHERE t.turma_id = :idTurma", nativeQuery = true)
+	@Query(value = "SELECT * FROM Professor as t WHERE t.professor_id = :idTurma", nativeQuery = true)
 	List<Professor> findProfessorPorTurma(@Param("idTurma") Long idTurma);
 	
 	@Query(value = "SELECT * FROM Professor as t WHERE t.academia_id = :idAcademia", nativeQuery = true)
@@ -24,9 +24,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 	@Modifying
 	@Query(value = "DELETE FROM Professor as t WHERE t.turma_id = :idTurma", nativeQuery = true)
 	void deletarProfessorPorTurma(@Param ("idTurma") Long idTurma);
-	
-//	boolean deleteAllAcademia(Academia academia);
-	
+		
 	@Query("SELECT t FROM Professor t WHERE (:nome IS NULL OR :nome = '' OR t.nomeProfessor = :nome)")
 		List<Professor> getProfessores(@Param("nome") String nome);
 	

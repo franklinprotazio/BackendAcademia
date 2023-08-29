@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.academia.core.entity.Academia;
 import com.example.academia.core.entity.Aluno;
-import com.example.academia.core.entity.Professor;
 import com.example.academia.core.entity.Turma;
 import com.example.academia.core.enums.StatusTurmaeNUM;
 import com.example.academia.core.exception.AlunoMatriculadoException;
@@ -22,6 +21,7 @@ import com.example.academia.integration.repository.AlunoRepository;
 import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.AcademiaRetornoDTO;
 import com.example.academia.v1.dto.MatriculaDTO;
+import com.example.academia.v1.dto.ProfessoresSemTurmaSemAcademiaESemAlunosDTO;
 import com.example.academia.v1.dto.TurmaDTO;
 
 @Service
@@ -137,8 +137,9 @@ public class TurmaServiceImpl implements TurmaService {
 
 		turmaDTO.setIdTurma(turma.getIdTurma());
 		turmaDTO.setCurso(turma.getCurso());
-		turmaDTO.setProfessor(turma.getProfessor());
 		turmaDTO.setHorario(turma.getHorario());
+		ProfessoresSemTurmaSemAcademiaESemAlunosDTO professorRetornoDTO = modelMapper.map(turma.getProfessor(), ProfessoresSemTurmaSemAcademiaESemAlunosDTO.class);
+		turmaDTO.setProfessor(professorRetornoDTO);
 		AcademiaRetornoDTO academiaRetornoDTO = modelMapper.map(turma.getAcademia(), AcademiaRetornoDTO.class);
 		turmaDTO.setAcademia(academiaRetornoDTO);
 		return turmaDTO;
@@ -180,21 +181,20 @@ public class TurmaServiceImpl implements TurmaService {
 
 		turma.getAlunos().add(aluno);
 
-		incrementarQuantidadeAlunoNaTurma(turma);
+		
 
 		turma = turmaRepository.save(turma);
+		
+	//	incrementarQuantidadeAlunoNaTurma(turma);
 
 		return modelMapper.map(turma, TurmaDTO.class);
 
 	}
 
-	public TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma) {
+	private TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma) {
 
-		turma.setQtoAluno(turma.getQtoAluno() + 1);
-		turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno());
-
-		if (turma.getQtoAluno() == 2) {
-		}
+		turma.setQtoAluno(turma.getQtoAluno());
+		turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno() + 1);
 
 		return modelMapper.map(turma, TurmaDTO.class);
 	}

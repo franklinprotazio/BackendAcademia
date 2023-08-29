@@ -31,7 +31,6 @@ public interface TurmaService {
 
 	StatusTurmaeNUM ativarTurma(Long idTurma);
 	
-	TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma);
 
 //	TurmaDTO matricularAlunoEmTurma(Long idTurma, Long idAluno)  throws EntidadeNaoEncontradaException, TurmaInativaException, AlunoNaoMatriculadoException ;
 	

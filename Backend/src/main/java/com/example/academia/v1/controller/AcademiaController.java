@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.academia.core.exception.AlunoMatriculadoException;
 import com.example.academia.core.exception.AlunoNaoMatriculadoException;
 import com.example.academia.core.exception.EntidadeNaoEncontradaException;
+import com.example.academia.core.exception.ProfessorVinculadoException;
+import com.example.academia.core.exception.TurmaHorarioOcupadoException;
 import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.exception.TurmaJaVinculadaException;
 import com.example.academia.core.exception.TurmaNaoVinculadaException;
@@ -134,7 +136,7 @@ public class AcademiaController {
 	
 	@PutMapping("/vincular/{idProfessor}/turma/{idTurma}")
 	
-	public ResponseEntity<Object> vincularProfessorEmTurma(@PathVariable Long idProfessor, @PathVariable Long idTurma)  {
+	public ResponseEntity<Object> vincularProfessorEmTurma(@PathVariable Long idProfessor, @PathVariable Long idTurma)    {
 		
 		VincularProfessorDTO vincularProfessorDTO = new VincularProfessorDTO(); 
 			
@@ -156,7 +158,9 @@ public class AcademiaController {
 					.body("Professor já está vinculado nesta turma");
 		} catch (TurmaInativaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Turma inativa ou indisponivel");
-		}
+		} catch (ProfessorVinculadoException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("A turma já tem um professor vinculado");
+		} 
 
 		return ResponseEntity.status(HttpStatus.OK).body("Professor Vinculado");
 	}

@@ -2,7 +2,6 @@ package com.example.academia.v1.dto;
 
 import java.util.List;
 
-import com.example.academia.core.entity.Professor;
 import com.example.academia.core.enums.StatusTurmaeNUM;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -19,7 +18,7 @@ public class TurmaDTO {
 	
 	private String horario;
 	
-	private Professor professor;
+	//private Professor professor;
 	
 	private int qtoAluno;
 	
@@ -27,6 +26,8 @@ public class TurmaDTO {
 	
 	@NotNull
 	private AcademiaRetornoDTO academia;
+	
+	private ProfessoresSemTurmaSemAcademiaESemAlunosDTO professor;
 	
 	private List<AlunoSemTurmaDTO> alunos;
 
