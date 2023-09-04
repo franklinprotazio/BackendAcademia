@@ -19,7 +19,7 @@ public class TurmaSemAcademiaDTO {
 
 	private String nomeProfessor;
 	
-	private int qtoAluno;
+	private Long qtoAluno;
 	
 	private StatusTurmaeNUM status;
 

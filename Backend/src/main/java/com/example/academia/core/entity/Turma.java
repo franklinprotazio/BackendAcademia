@@ -43,7 +43,7 @@ public class Turma implements Serializable{
 	private Professor professor;
 		
 	@Column(name = "qto_Aluno")
-	private int qtoAluno;
+	private Long qtoAluno;
 	
 	@Enumerated(EnumType.STRING)
     @Column(name = "status")

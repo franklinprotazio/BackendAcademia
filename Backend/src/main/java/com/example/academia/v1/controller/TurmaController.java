@@ -20,7 +20,6 @@ import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.exception.TurmaInativaException;
 import com.example.academia.core.service.AlunoService;
 import com.example.academia.core.service.TurmaService;
-import com.example.academia.integration.repository.TurmaRepository;
 import com.example.academia.v1.dto.MatriculaDTO;
 import com.example.academia.v1.dto.TurmaDTO;
 
@@ -35,9 +34,6 @@ public class TurmaController {
 
 	@Autowired
 	AlunoService alunoService;
-
-	@Autowired
-	TurmaRepository turmaRepository;
 
 	@GetMapping
 	public ResponseEntity<Object> getTurmas(@RequestParam(name = "horario", required = false) String horario,
@@ -57,6 +53,20 @@ public class TurmaController {
 		TurmaDTO turmaRetornoDTO = turmaService.salvarTurma(turmaDTO);
 
 		return ResponseEntity.status(HttpStatus.OK).body(turmaRetornoDTO);
+	}
+	
+	
+	@GetMapping("/maisalunos")
+	public ResponseEntity<Object> getTurmaComMaisAlunos() throws EntidadeNaoEncontradaException{
+		
+		try {
+			TurmaDTO turmaComMaisAluno = turmaService.getTurmaComMaisAluno();
+			return ResponseEntity.status(HttpStatus.OK).body(turmaComMaisAluno);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe turmas cadastradas");
+		}
+		
+		
 	}
 
 	@PutMapping("/matricular")

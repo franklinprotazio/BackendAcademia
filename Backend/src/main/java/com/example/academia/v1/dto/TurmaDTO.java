@@ -20,7 +20,7 @@ public class TurmaDTO {
 	
 	//private Professor professor;
 	
-	private int qtoAluno;
+	private Long qtoAluno;
 	
 	private StatusTurmaeNUM status;
 	

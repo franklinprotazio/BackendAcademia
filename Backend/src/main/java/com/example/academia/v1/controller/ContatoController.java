@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.service.ContatoService;
 import com.example.academia.v1.dto.AlunoDTO;
 import com.example.academia.v1.dto.ContatoSemAlunoDTO;
@@ -28,28 +29,37 @@ public class ContatoController {
 	@GetMapping("aluno/{id}")
 	public ResponseEntity<Object> buscarAlunoPorId(@PathVariable(value = "id") @Valid Long idAluno) {
 
-		AlunoDTO alunoDTO = contatoService.buscarAlunoPorId(idAluno);
+		AlunoDTO alunoDTO;
 
-		if (alunoDTO != null && alunoDTO.getIdAluno() != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(alunoDTO);
+		try {
+			alunoDTO = contatoService.buscarAlunoPorId(idAluno);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
 		}
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+		return ResponseEntity.status(HttpStatus.OK).body(alunoDTO);
 	}
 
 	@PostMapping("aluno/{id}")
-	public ResponseEntity<Object> cadastrarContatoDeAluno(@RequestBody ContatoSemAlunoDTO enderecoDTO,
+	public ResponseEntity<Object> cadastrarContatoDeAluno(@RequestBody ContatoSemAlunoDTO contatoDTO,
 			@PathVariable(value = "id") @Valid Long idAluno) {
 
-		AlunoDTO alunoDTO = contatoService.buscarAlunoPorId(idAluno);
+		AlunoDTO alunoDTO;
 
-
-		if (alunoDTO != null && alunoDTO.getIdAluno() != null) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(contatoService.salvarContatoDeAluno(enderecoDTO, idAluno));
+		try {
+			alunoDTO = contatoService.buscarAlunoPorId(idAluno);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+		}
+		
+		
+		if(contatoDTO.getEmail() == contatoDTO.getEmail()) {
+			
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Email já cadastrado no sistema");
 		}
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+		return ResponseEntity.status(HttpStatus.OK).body(contatoService.salvarContatoDeAluno(contatoDTO, idAluno));
+
 	}
 
 }

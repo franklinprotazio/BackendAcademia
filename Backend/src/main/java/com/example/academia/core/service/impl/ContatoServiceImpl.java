@@ -29,7 +29,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public AlunoDTO buscarAlunoPorId(Long idAluno) throws EntidadeNaoEncontradaException {
-
+		
 		Aluno aluno = alunoRepository.findById(idAluno)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException(MENSAGEM_ALUNO_INESISTENTE + idAluno));
 

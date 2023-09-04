@@ -30,6 +30,8 @@ public interface TurmaService {
 	TurmaDTO matricularAlunoEmTurma(MatriculaDTO matriculaDTO) throws EntidadeNaoEncontradaException, TurmaInativaException, AlunoNaoMatriculadoException, AlunoMatriculadoException;
 
 	StatusTurmaeNUM ativarTurma(Long idTurma);
+
+	TurmaDTO getTurmaComMaisAluno();
 	
 
 //	TurmaDTO matricularAlunoEmTurma(Long idTurma, Long idAluno)  throws EntidadeNaoEncontradaException, TurmaInativaException, AlunoNaoMatriculadoException ;

@@ -2,6 +2,7 @@ package com.example.academia.integration.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.academia.core.entity.Turma;
-import com.example.academia.core.enums.StatusTurmaeNUM;
 
 public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
@@ -32,6 +32,11 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 	@Query("UPDATE Turma t SET t.qtoAluno = t.qtoAluno + ?1")
 	void atualizarQuantidadeAlunos(int qtoAluno);	
 
+	@Query("SELECT t.id, COUNT(a) AS totalAlunos FROM Turma t " +
+		       "LEFT JOIN t.alunos a " +
+		       "GROUP BY t.id " +
+		       "ORDER BY totalAlunos DESC")
+		List<Object[]> findTurmaComMaiorQuantidadeDeAlunos();
 
 
 	

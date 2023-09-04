@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.academia.core.entity.Academia;
@@ -138,7 +140,8 @@ public class TurmaServiceImpl implements TurmaService {
 		turmaDTO.setIdTurma(turma.getIdTurma());
 		turmaDTO.setCurso(turma.getCurso());
 		turmaDTO.setHorario(turma.getHorario());
-		ProfessoresSemTurmaSemAcademiaESemAlunosDTO professorRetornoDTO = modelMapper.map(turma.getProfessor(), ProfessoresSemTurmaSemAcademiaESemAlunosDTO.class);
+		ProfessoresSemTurmaSemAcademiaESemAlunosDTO professorRetornoDTO = modelMapper.map(turma.getProfessor(),
+				ProfessoresSemTurmaSemAcademiaESemAlunosDTO.class);
 		turmaDTO.setProfessor(professorRetornoDTO);
 		AcademiaRetornoDTO academiaRetornoDTO = modelMapper.map(turma.getAcademia(), AcademiaRetornoDTO.class);
 		turmaDTO.setAcademia(academiaRetornoDTO);
@@ -181,22 +184,32 @@ public class TurmaServiceImpl implements TurmaService {
 
 		turma.getAlunos().add(aluno);
 
-		
-
 		turma = turmaRepository.save(turma);
-		
-	//	incrementarQuantidadeAlunoNaTurma(turma);
 
 		return modelMapper.map(turma, TurmaDTO.class);
 
 	}
 
-	private TurmaDTO incrementarQuantidadeAlunoNaTurma(Turma turma) {
+	@Override
+	public TurmaDTO getTurmaComMaisAluno() throws EntidadeNaoEncontradaException {
+		List<Object[]> turmas = turmaRepository.findTurmaComMaiorQuantidadeDeAlunos();
 
-		turma.setQtoAluno(turma.getQtoAluno());
-		turmaRepository.atualizarQuantidadeAlunos(turma.getQtoAluno() + 1);
+		if (!turmas.isEmpty()) {
+			Object[] firstResult = turmas.get(0);
+			Long idTurma = (Long) firstResult[0];
+			Long totalAlunos = (Long) firstResult[1];
 
-		return modelMapper.map(turma, TurmaDTO.class);
+			// Agora que temos os valores, você pode usar esses dados para criar um DTO.
+			TurmaDTO turmaDTO = new TurmaDTO();
+			turmaDTO.setIdTurma(idTurma);
+			turmaDTO.setQtoAluno(totalAlunos);
+			return turmaDTO;
+
+		} else {
+			// Lida com o caso em que não há turmas com alunos.
+			throw new EntidadeNaoEncontradaException("Não existe turmas cadastradas");
+
+		}
 	}
 
 }

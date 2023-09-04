@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.academia.core.exception.EntidadeNaoEncontradaException;
 import com.example.academia.core.service.EnderecoService;
 import com.example.academia.v1.dto.AlunoDTO;
 import com.example.academia.v1.dto.EnderecoSemAlunoDTO;
@@ -28,31 +29,42 @@ public class EnderecoController {
 	@GetMapping("aluno/{id}")
 	public ResponseEntity<Object> buscarAlunoPorId(@PathVariable(value = "id") @Valid Long idAluno) {
 
-		AlunoDTO alunoDTO = enderecoService.buscarAlunoPorId(idAluno);
+		AlunoDTO alunoDTO;
 
-		if (alunoDTO != null && alunoDTO.getIdAluno() != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(alunoDTO);
+		try {
+			alunoDTO = enderecoService.buscarAlunoPorId(idAluno);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+			
 		}
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+		return ResponseEntity.status(HttpStatus.OK).body(alunoDTO);
 	}
 
 	@PostMapping("aluno/{id}")
 	public ResponseEntity<Object> cadastrarEnderecoDeAluno(@RequestBody EnderecoSemAlunoDTO enderecoDTO,
 			@PathVariable(value = "id") @Valid Long idAluno) {
 
-		AlunoDTO alunoDTO = enderecoService.buscarAlunoPorId(idAluno);
+		AlunoDTO alunoDTO;
+
+		try {
+			alunoDTO = enderecoService.buscarAlunoPorId(idAluno);
+
+		} catch (EntidadeNaoEncontradaException e) {
+
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE + idAluno);
+		}
 
 		if (alunoDTO.getEnderecos().size() >= 2) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("O aluno já tem dois endereços cadastrados");
 		}
-
-		if (alunoDTO != null && alunoDTO.getIdAluno() != null) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(enderecoService.salvarEnderecoDeAluno(enderecoDTO, idAluno));
+		
+		if(alunoDTO.getEnderecos() == alunoDTO.getEnderecos()) {
+			
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Endereço já cadastrado no sistema");
 		}
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MENSAGEM_ALUNO_INESISTENTE);
+		return ResponseEntity.status(HttpStatus.OK).body(enderecoService.salvarEnderecoDeAluno(enderecoDTO, idAluno));
 	}
 
 }

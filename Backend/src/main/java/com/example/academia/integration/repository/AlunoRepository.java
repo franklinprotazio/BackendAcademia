@@ -24,14 +24,7 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	@Modifying
 	@Query(value = "DELETE FROM Aluno as t WHERE t.turma_id = :idTurma", nativeQuery = true)
 	void deletarAlunoPorTurma(@Param ("idTurma") Long idTurma);
-	
-//	boolean deleteAllAcademia(Academia academia);
-//	
-//	@Query("SELECT t FROM Aluno t WHERE (:inicio IS NULL OR :inicio = '' OR t.dataMatricula >= PARSEDATETIME(:inicio, 'yyyy-MM-dd')) "
-//			+ "AND (:fim IS NULL OR :fim = '' OR t.dataMatricula <= PARSEDATETIME(:fim, 'yyyy-MM-dd')) "
-//			+ "AND (:nome IS NULL OR :nome = '' OR t.nomeAluno = :nome)")
-//		List<Aluno> getAlunos(@Param("inicio") String inicio, @Param("fim") String fim, @Param("nome") String nome);
-	
+		
 	@Query("SELECT t FROM Aluno t WHERE (:inicio IS NULL OR :inicio = '' OR t.dataMatricula >= STR_TO_DATE(:inicio, '%Y-%m-%d')) "
 	        + "AND (:fim IS NULL OR :fim = '' OR t.dataMatricula <= STR_TO_DATE(:fim, '%Y-%m-%d')) "
 	        + "AND (:nome IS NULL OR :nome = '' OR t.nomeAluno = :nome)")

@@ -19,7 +19,7 @@ public class TurmaRetornoDTO {
 	
 	private Aluno aluno;
 	
-	private int qtoAluno;
+	private Long qtoAluno;
 	
 	private int qtoProfessor;
 
